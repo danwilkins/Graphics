@@ -56,9 +56,10 @@ namespace UnityEngine.Experimental.Rendering.RenderGraphModule
             if (!m_Resources.IsRenderGraphResourceImported(input.handle) && m_Resources.TextureNeedsFallback(input))
             {
                 var texDimension = m_Resources.GetTextureResourceDesc(input.handle).dimension;
+                var bindMS = m_Resources.GetTextureResourceDesc(input.handle).bindTextureMS;
                 if (texDimension == TextureXR.dimension)
                 {
-                    return m_RenderGraph.defaultResources.blackTextureXR;
+                    return bindMS ? m_RenderGraph.defaultResources.blackTextureMSXR : m_RenderGraph.defaultResources.blackTextureXR;
                 }
                 else if (texDimension == TextureDimension.Tex3D)
                 {

@@ -93,16 +93,25 @@ namespace UnityEngine.Rendering
         public static RTHandle GetMagentaTexture() { return useTexArray ? m_MagentaTexture2DArrayRTH : m_MagentaTextureRTH; }
 
         static Texture2D        m_BlackTexture;
+        static Texture          m_BlackTextureMS;
+        static Texture          m_BlackTexture2DArrayMS;
         static Texture3D        m_BlackTexture3D;
         static Texture2DArray   m_BlackTexture2DArray;
         static RTHandle         m_BlackTexture2DArrayRTH;
         static RTHandle         m_BlackTextureRTH;
+        static RTHandle         m_BlackTexture2DArrayMSRTH;
+        static RTHandle         m_BlackTextureMSRTH;
         static RTHandle         m_BlackTexture3DRTH;
         /// <summary>
         /// Default black texture.
         /// </summary>
         /// <returns>The default black texture.</returns>
         public static RTHandle GetBlackTexture() { return useTexArray ? m_BlackTexture2DArrayRTH : m_BlackTextureRTH; }
+        /// <summary>
+        /// Default black texture with antialiasing.
+        /// </summary>
+        /// <returns>The default black texture with antialiasing.</returns>
+        public static RTHandle GetBlackTextureMultiSampled() { return useTexArray ? m_BlackTexture2DArrayMSRTH : m_BlackTextureMSRTH; }
         /// <summary>
         /// Default black texture array.
         /// </summary>
@@ -173,6 +182,14 @@ namespace UnityEngine.Rendering
                 m_BlackTexture3D = CreateBlackTexture3D("Black Texture3D");
                 m_BlackTexture3DRTH = RTHandles.Alloc(m_BlackTexture3D);
 
+                // Black MS
+                RTHandles.Release(m_BlackTextureMSRTH);
+                m_BlackTextureMS = CreateBlackTextureMultiSampled(cmd, m_BlackTexture);
+                m_BlackTextureMSRTH = RTHandles.Alloc(m_BlackTextureMS);
+                RTHandles.Release(m_BlackTexture2DArrayMSRTH);
+                m_BlackTexture2DArrayMS = CreateBlackTexture2DArrayMultiSampled(cmd, m_BlackTexture2DArray);
+                m_BlackTexture2DArrayMSRTH = RTHandles.Alloc(m_BlackTexture2DArrayMS);
+
                 // White
                 RTHandles.Release(m_WhiteTextureRTH);
                 m_WhiteTextureRTH = RTHandles.Alloc(Texture2D.whiteTexture);
@@ -189,6 +206,42 @@ namespace UnityEngine.Rendering
                 Graphics.CopyTexture(source, 0, 0, texArray, i, 0);
 
             return texArray;
+        }
+
+        static Texture CreateBlackTextureMultiSampled(CommandBuffer cmd, Texture2D source)
+        {
+            RenderTexture blackTextureMS = new RenderTexture(1, 1, 0, GraphicsFormat.R8G8B8A8_SRGB)
+            {
+                name = "Black Texture",
+                useMipMap = false,
+                autoGenerateMips = false,
+                enableRandomWrite = true,
+                bindTextureMS = true,
+                antiAliasing = 2
+            };
+
+            blackTextureMS.Create();
+
+            return blackTextureMS;
+        }
+
+        static Texture CreateBlackTexture2DArrayMultiSampled(CommandBuffer cmd, Texture2DArray source)
+        {
+            RenderTexture blackTexture2DArrayMS = new RenderTexture(1, 1, 0, GraphicsFormat.R8G8B8A8_SRGB)
+            {
+                dimension = TextureDimension.Tex2DArray,
+                volumeDepth = slices,
+                name = "Black Texture Texture Array",
+                useMipMap = false,
+                autoGenerateMips = false,
+                enableRandomWrite = true,
+                bindTextureMS = true,
+                antiAliasing = 2
+            };
+
+            blackTexture2DArrayMS.Create();
+
+            return blackTexture2DArrayMS;
         }
 
         static Texture CreateBlackUIntTextureArray(CommandBuffer cmd, ComputeShader clearR32_UIntShader)
