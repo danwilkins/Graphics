@@ -59,15 +59,15 @@ namespace UnityEngine.Experimental.Rendering.RenderGraphModule
                 var bindMS = m_Resources.GetTextureResourceDesc(input.handle).bindTextureMS;
                 if (texDimension == TextureXR.dimension)
                 {
-                    return bindMS ? m_RenderGraph.defaultResources.blackTextureMSXR : m_RenderGraph.defaultResources.blackTextureXR;
+                    return bindMS ? TextureHandle.nullHandle : m_RenderGraph.defaultResources.blackTextureXR;
                 }
                 else if (texDimension == TextureDimension.Tex3D)
                 {
-                    return m_RenderGraph.defaultResources.blackTexture3DXR;
+                    return bindMS ? TextureHandle.nullHandle : m_RenderGraph.defaultResources.blackTexture3DXR;
                 }
                 else
                 {
-                    return m_RenderGraph.defaultResources.blackTexture;
+                    return bindMS ? TextureHandle.nullHandle : m_RenderGraph.defaultResources.blackTexture;
                 }
             }
 
