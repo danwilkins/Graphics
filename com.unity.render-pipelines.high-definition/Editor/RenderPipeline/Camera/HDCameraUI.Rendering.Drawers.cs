@@ -6,9 +6,9 @@ namespace UnityEditor.Rendering.HighDefinition
 {
     using CED = CoreEditorDrawer<SerializedHDCamera>;
 
-    static partial class HDCameraUI
+    internal static partial class HDCameraUI
     {
-        partial class Rendering
+        public partial class Rendering
         {
             public static readonly CED.IDrawer Drawer = CED.FoldoutGroup(
                 CameraUI.Rendering.Styles.header,
@@ -38,6 +38,15 @@ namespace UnityEditor.Rendering.HighDefinition
                     (serialized, owner) => !serialized.passThrough.boolValue && serialized.customRenderingSettings.boolValue,
                     (serialized, owner) => FrameSettingsUI.Inspector().Draw(serialized.frameSettings, owner)
                 )
+            );
+
+            public static readonly CED.IDrawer DrawerPreset = CED.FoldoutGroup(
+                CameraUI.Rendering.Styles.header,
+                Expandable.Rendering,
+                k_ExpandedState,
+                FoldoutOption.Indent,
+                CameraUI.Rendering.Drawer_Rendering_CullingMask,
+                CameraUI.Rendering.Drawer_Rendering_OcclusionCulling
             );
 
             static void Drawer_Rendering_AllowDynamicResolution(SerializedHDCamera p, Editor owner)
