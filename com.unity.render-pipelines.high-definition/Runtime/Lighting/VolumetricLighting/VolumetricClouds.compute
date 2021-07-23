@@ -1148,7 +1148,7 @@ void PreUpscaleClouds(uint3 dispatchThreadId : SV_DispatchThreadID,
 
     // Accumulate the result with the previous frame
     _CloudsLightingTextureRW[COORD_TEXTURE2D_X(intermediateCoord)] = cloudLighting;
-    _CloudsAdditionalTextureRW[COORD_TEXTURE2D_X(intermediateCoord)] = float3(0, currentDepth, cloudCloudDepth);
+    _CloudsAdditionalTextureRW[COORD_TEXTURE2D_X(intermediateCoord)] = float3(1, currentDepth, cloudCloudDepth);
 }
 
 // Constant buffer where all variables should land
