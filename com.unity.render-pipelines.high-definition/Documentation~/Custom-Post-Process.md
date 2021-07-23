@@ -151,6 +151,11 @@ Shader "Hidden/Shader/GrayScale"
         UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
         uint2 positionSS = input.texcoord * _ScreenSize.xy;
+
+        //NOTE: As of 12.x beta, for new custom post processes to be compatible with Dynamic resolution, please use:
+        //uint2 positionSS = input.texcoord * _PostProcessScreenSize.xy;
+        // This position must be used ultimately for depth / normal and color. If not, your custom post process won't work when dynamic resolution / DLSS is enabled.
+
         float3 outColor = LOAD_TEXTURE2D_X(_InputTexture, positionSS).xyz;
 
         // We do the blending manually instead of relying on the hardware blend
@@ -274,6 +279,20 @@ sealed class GrayScaleEditor : VolumeComponentEditor
 ```
 This custom editor is not really useful as it produces the same result as the editor that Unity creates. Custom Volume component editors also support an [additonal properties toggle](More-Options.md). To add it, you have to set hasAdvancedMode override to true. Then, inside the OnInspectorGUI, you can use the isInAdvancedMode boolean to display more properties.
 
+## Dynamic resolution and DLSS support
+
+If you are planning to fully take advantage of DLSS and / or dynamic resolution on your pass, and you require to interpolate / uv sample either color / normals or velocity, you must use the following functions to calculate the correct uvs:
+
+```glsl
+#include "Packages/com.unity.render-pipelines.high-dynamic/Runtime/ShaderLibrary/ShaderVariables.hlsl"
+
+//...
+
+float2 UVs = ... //the uvs coming from the interpolator
+float2 correctUvs = ClampAndScaleUVForBilinearPostProcessTexture(UV); // use these uvs to sample color / normal and velocity
+
+```
+
 ## TroubleShooting
 
 If your effect does not display correctly:
@@ -285,6 +304,8 @@ If your effect does not display correctly:
 * In the Volume that contains your post process, make sure that it has a high enough priority and that your Camera is inside its bounds.
 
 * Check that your shader doesn't contain any **clip()** instructions, that the blend mode is set to Off and the output alpha is always 1.
+
+* If your effect does not work with dynamic resolution, use the _PostProcessScreenSize constant so it fits correctly. This is only required when you are planning to rely on DRS, and you need normal / velocity and color.
 
 ## Known issues and Limitations
 
