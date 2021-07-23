@@ -32,4 +32,4 @@ This page contains information on Light components in the Universal Render Pipel
 | __Culling Mask__| Use this to selectively exclude groups of objects from being affected by the Light. For more information, see [Layers](https://docs.unity3d.com/Manual/Layers.html).|
 
 ## Preset
-When using Preset of Light Component, only a subset of properties are supported.
+When using Preset of Light Component, only a subset of properties are supported. Unsupported properties are hidden.
