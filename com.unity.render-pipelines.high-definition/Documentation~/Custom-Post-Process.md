@@ -154,7 +154,7 @@ Shader "Hidden/Shader/GrayScale"
 
         //NOTE: As of 12.x beta, for new custom post processes to be compatible with Dynamic resolution, please use:
         //uint2 positionSS = input.texcoord * _PostProcessScreenSize.xy;
-        // This position must be used ultimately for depth / normal and color. If not, your custom post process won't work when dynamic resolution / DLSS is enabled.
+        // This position must be used ultimately for color / normal and velocity. If not, your custom post process won't work when dynamic resolution / DLSS is enabled.
 
         float3 outColor = LOAD_TEXTURE2D_X(_InputTexture, positionSS).xyz;
 
