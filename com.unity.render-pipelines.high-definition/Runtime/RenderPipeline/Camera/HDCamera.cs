@@ -902,8 +902,9 @@ namespace UnityEngine.Rendering.HighDefinition
             if (canDoDynamicResolution)
             {
                 Vector2Int scaledSize = DynamicResolutionHandler.instance.GetScaledSize(new Vector2Int(actualWidth, actualHeight));
-                actualWidth = scaledSize.x;
-                actualHeight = scaledSize.y;
+                //ensure that the scale is within and we dont round up an extra pixel
+                actualWidth = Math.Min(scaledSize.x, actualWidth);
+                actualHeight = Math.Min(scaledSize.y, actualHeight);
                 globalMipBias += DynamicResolutionHandler.instance.CalculateMipBias(scaledSize, nonScaledViewport, IsDLSSEnabled());
                 lowResScale = DynamicResolutionHandler.instance.GetLowResMultiplier(lowResScale);
             }
