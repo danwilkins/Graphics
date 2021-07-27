@@ -323,6 +323,9 @@ Shader "Hidden/Universal Render Pipeline/StencilDeferred"
             half3 specularColor = LightingSpecular(attenuatedLightColor, unityLight.direction, inputData.normalWS, inputData.viewDirectionWS, half4(surfaceData.specular, 1), smoothness);
 
             // TODO: if !defined(_SPECGLOSSMAP) && !defined(_SPECULAR_COLOR), force specularColor to 0 in gbuffer code
+            diffuseColor.r = saturate(diffuseColor.r);
+            diffuseColor.g = saturate(diffuseColor.g);
+            diffuseColor.b = saturate(diffuseColor.b);
             color = diffuseColor * surfaceData.albedo + specularColor;
             //color = diffuseColor;
 
