@@ -89,7 +89,27 @@ float DistanceAttenuation(float distanceSqr, half2 distanceAttenuation)
     half smoothFactor = half(saturate(distanceSqr * distanceAttenuationFloat.x + distanceAttenuationFloat.y));
 #endif
 
+
     return lightAtten * smoothFactor;
+}
+
+float DistanceAttenuationLinear(float distanceSqr, half2 distanceAttenuation)
+{
+    float2 distanceAttenuationFloat = float2(distanceAttenuation);
+    return 1.0 - distanceSqr * distanceAttenuationFloat.x;
+}
+
+float DistanceAttenuationLantern(float distanceSqr, half2 distanceAttenuation)
+{
+    float2 distanceAttenuationFloat = float2(distanceAttenuation);
+    float reciprocal = rcp(distanceAttenuationFloat.x);
+    half a = 0.00001;
+    half b = 0.0f;
+    half c = 1.0 / (reciprocal * 0.01);
+    half d = distanceSqr;
+    half multiplier = 6.0;
+    half attenuation = 1.0f / ( a + b * d + c * d) * multiplier;
+    return attenuation;
 }
 
 half AngleAttenuation(half3 spotDirection, half3 lightDirection, half2 spotAttenuation)

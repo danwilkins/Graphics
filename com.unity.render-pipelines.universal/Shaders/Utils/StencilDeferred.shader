@@ -324,6 +324,8 @@ Shader "Hidden/Universal Render Pipeline/StencilDeferred"
 
             // TODO: if !defined(_SPECGLOSSMAP) && !defined(_SPECULAR_COLOR), force specularColor to 0 in gbuffer code
             color = diffuseColor * surfaceData.albedo + specularColor;
+            //color = diffuseColor;
+
         #endif
 
         return half4(color, alpha);
@@ -455,6 +457,7 @@ Shader "Hidden/Universal Render Pipeline/StencilDeferred"
             Cull Front
             Blend One One, Zero One
             BlendOp Add, Add
+            //BlendOp Max, Max
 
             Stencil {
                 Ref [_SimpleLitPunctualStencilRef]

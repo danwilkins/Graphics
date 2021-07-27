@@ -58,10 +58,12 @@ Light UnityLightFromPunctualLightDataAndWorldSpacePosition(PunctualLightData pun
 
     float3 lightVector = punctualLightData.posWS - positionWS.xyz;
     float distanceSqr = max(dot(lightVector, lightVector), HALF_MIN);
-
     half3 lightDirection = half3(lightVector * rsqrt(distanceSqr));
 
-    half attenuation = DistanceAttenuation(distanceSqr, punctualLightData.attenuation.xy) * AngleAttenuation(punctualLightData.spotDirection.xyz, lightDirection, punctualLightData.attenuation.zw);
+    // LANTERN - ADD ATTENUATION HERE
+    //half attenuation = DistanceAttenuation(distanceSqr, punctualLightData.attenuation.xy) * AngleAttenuation(punctualLightData.spotDirection.xyz, lightDirection, punctualLightData.attenuation.zw);
+    //half attenuation = DistanceAttenuationLinear(distanceSqr, punctualLightData.attenuation.xy) * AngleAttenuation(punctualLightData.spotDirection.xyz, lightDirection, punctualLightData.attenuation.zw);
+    half attenuation = DistanceAttenuationLantern(distanceSqr, punctualLightData.attenuation.xy) * AngleAttenuation(punctualLightData.spotDirection.xyz, lightDirection, punctualLightData.attenuation.zw);
 
     light.direction = lightDirection;
     light.color = punctualLightData.color.rgb;
